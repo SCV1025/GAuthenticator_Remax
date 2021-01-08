@@ -1,19 +1,21 @@
-# Remax One
+# GAuthenticator_WeChat
 
-使用 Remax 开发跨平台小程序。
+一个简单的谷歌Authenticator微信小程序记录器
 
-## Getting Start
+# 说明
+本程序基于remax-one开发，由于使用了微信私有的API及组件，暂时仅支持微信，数据存储于微信小程序localStorage。
+
+## 开发
 
 安装依赖
 
 ```bash
-yarn //由于依赖了node-sass,建议使用eyn工具进行初始化
+yarn 
 ```
 
 调试项目
 
 ```bash
-# 选定要进行开发的平台，如 wechat，并调试
 yarn dev wechat
 ```
 
