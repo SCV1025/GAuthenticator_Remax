@@ -23,6 +23,8 @@ export default () => {
     const [popupTips, setPopupTips] = React.useState('');
     //输入秘钥弹窗控制
     const [showInput, setShowInput] = React.useState(false);
+    //秘钥弹窗输入内容
+    const [inputValue, setInputValue] = React.useState('');
     //倒计时计数器
     const [count, setCount] = React.useState(
         dayjs().second() < 30 ? 30 - dayjs().second() : 60 - dayjs().second(),
@@ -198,7 +200,7 @@ export default () => {
                     icon={<Icon type='write' color='#1890ff' size='28px' />}
                     block
                     onTap={() => {
-                        popupNow('可以重复添加，但没必要嗷！');
+                        setShowInput(true);
                     }}
                 >
                     {' '}
@@ -293,23 +295,38 @@ export default () => {
             <Popup
                 open={showInput}
                 onClose={() => {
-                    setShow(false);
+                    setShowInput(false);
                 }}
                 closeable={true}
                 curve={'ease'}
+                title={'手动添加动态密码'}
                 style={{
-                    width: '80%',
-                    paddingTop: '55px',
-                    paddingBottom: '45px',
+                    width: '95%',
+                    paddingBottom: '60px',
                 }}
             >
                 <Cell.Input
-                    required
-                    label='秘钥'
                     placeholder='请输入秘钥'
-                    border={false}
+                    border={true}
+                    value={inputValue}
+                    onChange={(v) => {
+                        setInputValue(v.target.value);
+                    }}
+                    style={{ paddingLeft: '40px', paddingTop: '15px' }}
                     extra={
-                        <Button type='primary' size='small'>
+                        <Button
+                            type='primary'
+                            size='small'
+                            onTap={() => {
+                                setShowInput(false);
+                                if (inputValue) {
+                                    addCode(inputValue);
+                                } else {
+                                    popupNow('请输入正确的动态密码链接');
+                                }
+                                setInputValue('');
+                            }}
+                        >
                             添加
                         </Button>
                     }
