@@ -35,13 +35,9 @@ export default () => {
     });
     //下拉刷新触发函数
     usePageEvent('onPullDownRefresh', () => {
-        // return new Promise((resolve) => {
-        //     getData().then((res) => {
-        //         resolve();
-        //     });
-        // });
         dataInitialization();
     });
+    //倒计时计数器
     React.useEffect(() => {
         let id = setTimeout(() => {
             if (count > 1) {
@@ -107,10 +103,6 @@ export default () => {
             },
         });
     };
-    const setDATA_handle = (new_data) => {
-        setDATA(new_data);
-    };
-
     //通用添加秘钥方法
     const addCode = (uri) => {
         try {
@@ -161,12 +153,10 @@ export default () => {
                     key: DATA.length.toString(),
                     rowData: OTPAuth.URI.parse(uri),
                 });
-                //console.log(newData);
                 setDATA(newData);
             }
         } catch (e) {
             popupNow('抱歉，不支持当前的二维码/秘钥链接');
-            //console.log('抱歉，不支持当前的二维码/秘钥链接');
         }
     };
     //弹窗方法
