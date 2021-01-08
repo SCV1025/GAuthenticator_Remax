@@ -3,7 +3,9 @@
 一个简单的谷歌Authenticator微信小程序记录器
 
 # 说明
-本程序基于remax-one开发，由于使用了微信私有的API及组件，暂时仅支持微信，数据存储于微信小程序localStorage。
+- 本程序基于remax-one开发，由于使用了微信私有的API及组件，暂时仅支持微信。
+- 数据存储于微信小程序localStorage。
+- ui组件使用 [annar-UI](https://annasearl.github.io/annar/)
 
 ## 开发
 
