@@ -1,0 +1,44 @@
+.app {
+    text-align: center;
+    padding: 0 24px;
+
+    .header {
+        padding-top: 30%;
+        background-color: #282c34;
+        font-size: 40px;
+        color: white;
+
+        .logo {
+            animation: logo-spin infinite 20s linear;
+            height: 240px;
+            width: 240px;
+            pointer-events: none;
+        }
+
+        .text {
+            margin-top: 64px;
+        }
+    }
+    .v_list {
+        margin-top: 50px;
+        width: 100%;
+        background-color: #999;
+        .titles {
+            border-bottom: 1px solid #ffffff;
+            height: 80px;
+            line-height: 80px;
+            font-weight: bold;
+            text-align: center;
+            color: #fff;
+        }
+    }
+}
+
+@keyframes logo-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

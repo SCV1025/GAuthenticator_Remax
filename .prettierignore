@@ -1,0 +1,13 @@
+**/*.md
+**/*.svg
+**/*.ejs
+**/*.html
+package.json
+app.json
+mini.project.json
+project.config.json
+remax.config.js
+node_modules/*
+.umi-production
+.umi-test
+/dist

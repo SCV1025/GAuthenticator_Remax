@@ -1,0 +1,43 @@
+{
+  "name": "template",
+  "private": true,
+  "version": "1.0.0",
+  "description": "开发模板",
+  "main": "index.js",
+  "keywords": [],
+  "author": "wlfcss",
+  "license": "MIT",
+  "scripts": {
+    "dev": "remax build -w -t",
+    "build": "cross-env NODE_ENV=production remax build -t",
+    "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,scss,md}'"
+  },
+  "lint-staged": {
+    "*.{js,jsx,less,md,scss}": [
+      "prettier --write"
+    ]
+  },
+  "dependencies": {
+    "@remax/plugin-sass": "^1.0.0",
+    "annar": "^2.0.7",
+    "classnames": "^2.2.6",
+    "constate": "^2.0.0",
+    "dayjs": "^1.10.2",
+    "lodash": "^4.17.20",
+    "otpauth": "^6.2.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "remax": "^2.7.10"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.13",
+    "prettier": "^2.0.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  }
+}
