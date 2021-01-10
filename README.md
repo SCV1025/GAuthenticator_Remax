@@ -2,11 +2,11 @@
 
 一个简单的谷歌Authenticator微信小程序记录器
 
-# 说明
+## 说明
 
 本程序基于remax-one开发，使用react-hooks方式实现，由于使用了微信私有的API及组件，暂时仅支持微信，数据存储于微信小程序localStorage。
 
-# 开发进度及计划说明
+## 开发进度及计划说明
 - [x] 扫码添加
 - [x] 输入秘钥链接添加  
 - [x] 倒计时
@@ -17,7 +17,7 @@
 - [ ] 支持 头条、阿里等小程序
 - [ ] 支持web端
 
-# 使用第三方依赖及感谢
+## 使用第三方依赖及感谢
 - 核心框架：remax.js
 - UI组件：annar-UI
 - HOTP/TOTP 解析依赖：[otpauth](https://github.com/hectorm/otpauth)
