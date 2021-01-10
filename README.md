@@ -4,6 +4,8 @@
 
 ## 说明
 
+![image](https://github.com/wlfcss/GAuthenticator_WeChat/blob/master/JIETU.jpg)
+
 本程序基于remax-one开发，使用react-hooks方式实现，由于使用了微信私有的API及组件，暂时仅支持微信，数据存储于微信小程序localStorage。
 
 ## 开发进度及计划说明
