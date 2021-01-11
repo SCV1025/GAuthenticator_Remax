@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { View, Text, Image } from 'remax/one';
 import styles from './index.module.scss';
-import { Button, Icon, Card, Popup, Cell } from 'annar';
+import { Form, Tabs, Button, Icon, Card, Popup, Cell } from 'annar';
 import { usePageEvent } from 'remax/macro';
 import _ from 'lodash';
 import * as dayjs from 'dayjs';
@@ -25,6 +25,151 @@ export default () => {
     const [showInput, setShowInput] = React.useState(false);
     //秘钥弹窗输入内容
     const [inputValue, setInputValue] = React.useState('');
+    const [stateKey1, setStateKey1] = React.useState('0');
+
+    //手动输入-秘钥链接函数
+    const handleFinish1 = (values) => {
+        //console.log('values', values);
+        addCode(values.link);
+        setShowInput(false);
+    };
+    //手动输入-秘钥详情函数
+    const handleFinish2 = (values) => {
+        console.log('values', values);
+        let totp = new OTPAuth.TOTP({
+            issuer: values.address,
+            label: values.user,
+            secret: values.secret,
+        });
+        console.log(totp.toString());
+        addCode(totp.toString());
+        setShowInput(false);
+    };
+    const handleFinishFailed = (values, errorFields) => {
+        console.log('errorFields', errorFields);
+    };
+
+    const tabs1 = [
+        {
+            key: '0',
+            title: '秘钥链接',
+            content: (
+                <Form
+                    onFinish={handleFinish1}
+                    onFinishFailed={handleFinishFailed}
+                >
+                    <Form.Item
+                        name='link'
+                        rules={[
+                            {
+                                pattern: /otpauth:/,
+                                message: ' 请输入正确的动态密码分享链接',
+                            },
+                            {
+                                require: true,
+                                message: ' 请输入正确的动态密码分享链接',
+                            },
+                        ]}
+                    >
+                        <Cell.Input
+                            icon='like'
+                            label='链接'
+                            placeholder='请输入'
+                            border={false}
+                        />
+                    </Form.Item>
+                    <Form.Item style={{ marginTop: 40, padding: '0 10px' }}>
+                        <Button
+                            type='primary'
+                            size='large'
+                            shape='square'
+                            //look='orange'
+                            block
+                            nativeType='submit'
+                        >
+                            添加
+                        </Button>
+                    </Form.Item>
+                </Form>
+            ),
+        },
+        {
+            key: '1',
+            title: ' 秘钥详情',
+            content: (
+                <Form
+                    onFinish={handleFinish2}
+                    onFinishFailed={handleFinishFailed}
+                >
+                    <Form.Item
+                        name='user'
+                        rules={[
+                            {
+                                required: true,
+                                message: ' 请输入用户名',
+                            },
+                        ]}
+                    >
+                        <Cell.Input
+                            icon='people'
+                            label='用户名'
+                            placeholder='请输入用户名'
+                            border={false}
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        name='secret'
+                        rules={[
+                            {
+                                pattern: /\w{16}/,
+                                message: ' 请输入正确的动态密码秘钥',
+                            },
+                            {
+                                required: true,
+                                message: ' 请输入正确的动态密码秘钥',
+                            },
+                        ]}
+                    >
+                        <Cell.Input
+                            icon='like'
+                            label='秘钥'
+                            placeholder='请输入秘钥'
+                            border={false}
+                        />
+                    </Form.Item>
+                    <Form.Item
+                        name='address'
+                        rules={[
+                            {
+                                required: true,
+                                message: ' 请输入正确的网址',
+                            },
+                        ]}
+                    >
+                        <Cell.Input
+                            icon='link'
+                            label='来源网址'
+                            placeholder='请输入'
+                            border={false}
+                        />
+                    </Form.Item>
+                    <Form.Item style={{ marginTop: 40, padding: '0 10px' }}>
+                        <Button
+                            type='primary'
+                            size='large'
+                            shape='square'
+                            //look='orange'
+                            block
+                            nativeType='submit'
+                        >
+                            添加
+                        </Button>
+                    </Form.Item>
+                </Form>
+            ),
+        },
+    ];
+
     //倒计时计数器
     const [count, setCount] = React.useState(
         dayjs().second() < 30 ? 30 - dayjs().second() : 60 - dayjs().second(),
@@ -289,38 +434,56 @@ export default () => {
                 }}
                 closeable={true}
                 curve={'ease'}
-                title={'手动添加动态密码'}
+                //title={'手动添加动态密码'}
                 style={{
                     width: '95%',
-                    paddingBottom: '60px',
+                    paddingTop: '15px',
+                    backgroundColor: '#fff',
                 }}
             >
-                <Cell.Input
-                    placeholder='请输入秘钥'
-                    border={true}
-                    value={inputValue}
-                    onChange={(v) => {
-                        setInputValue(v.target.value);
-                    }}
-                    style={{ paddingLeft: '40px', paddingTop: '15px' }}
-                    extra={
-                        <Button
-                            type='primary'
-                            size='small'
-                            onTap={() => {
-                                setShowInput(false);
-                                if (inputValue) {
-                                    addCode(inputValue);
-                                } else {
-                                    popupNow('请输入正确的动态密码链接');
-                                }
-                                setInputValue('');
-                            }}
-                        >
-                            添加
-                        </Button>
-                    }
-                />
+                <Tabs
+                    onTabClick={({ key }) => setStateKey1(key)}
+                    activeKey={stateKey1}
+                    // direction='vertical'
+                    titleSquare
+                    animated
+                >
+                    {tabs1.map((tab) => (
+                        <Tabs.TabContent key={tab.key} tab={tab.title}>
+                            <Card>
+                                <View className={styles.tabContent}>
+                                    {tab.content}
+                                </View>
+                            </Card>
+                        </Tabs.TabContent>
+                    ))}
+                </Tabs>
+                {/*<Cell.Input*/}
+                {/*    placeholder='请输入秘钥'*/}
+                {/*    border={true}*/}
+                {/*    value={inputValue}*/}
+                {/*    onChange={(v) => {*/}
+                {/*        setInputValue(v.target.value);*/}
+                {/*    }}*/}
+                {/*    style={{ paddingLeft: '40px', paddingTop: '15px' }}*/}
+                {/*    extra={*/}
+                {/*        <Button*/}
+                {/*            type='primary'*/}
+                {/*            size='small'*/}
+                {/*            onTap={() => {*/}
+                {/*                setShowInput(false);*/}
+                {/*                if (inputValue) {*/}
+                {/*                    addCode(inputValue);*/}
+                {/*                } else {*/}
+                {/*                    popupNow('请输入正确的动态密码链接');*/}
+                {/*                }*/}
+                {/*                setInputValue('');*/}
+                {/*            }}*/}
+                {/*        >*/}
+                {/*            添加*/}
+                {/*        </Button>*/}
+                {/*    }*/}
+                {/*/>*/}
             </Popup>
         </View>
     );
