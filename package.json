@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@remax/plugin-sass": "^1.0.0",
-    "annar": "^2.0.7",
+    "annar": "2.0.7",
     "classnames": "^2.2.6",
     "constate": "^2.0.0",
     "dayjs": "^1.10.2",
