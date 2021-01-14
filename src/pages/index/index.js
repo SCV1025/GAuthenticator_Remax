@@ -5,6 +5,7 @@ import { Button, Card, Cell, Form, Icon, Popup, Tabs } from 'annar';
 import { usePageEvent } from 'remax/macro';
 import _ from 'lodash';
 import * as dayjs from 'dayjs';
+import * as uniqid from 'uniqid';
 
 import {
     getStorageInfoSync,
@@ -36,13 +37,11 @@ export default () => {
     };
     //手动输入-秘钥详情函数
     const handleFinish2 = (values) => {
-        console.log('values', values);
         let totp = new OTPAuth.TOTP({
             issuer: values.address,
             label: values.user,
             secret: values.secret,
         });
-        console.log(totp.toString());
         addCode(totp.toString());
         setShowInput(false);
     };
@@ -251,7 +250,7 @@ export default () => {
     };
     //生成UUID
     const setUUID = () => {
-        return _.uniqueId('key_');
+        return uniqid('key_');
     };
     //通用删除秘钥方法
     const deleteCode = (uuid) => {

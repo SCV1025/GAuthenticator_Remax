@@ -27,7 +27,8 @@
     "otpauth": "^6.2.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
-    "remax": "^2.7.10"
+    "remax": "^2.7.10",
+    "uniqid": "^5.2.0"
   },
   "devDependencies": {
     "cross-env": "^7.0.3",
