@@ -251,10 +251,7 @@ export default () => {
     };
     //生成UUID
     const setUUID = () => {
-        let temp_url = URL.createObjectURL(new Blob());
-        let uuid = temp_url.toString();
-        URL.revokeObjectURL(temp_url);
-        return uuid.substr(uuid.lastIndexOf('/') + 1);
+        return _.uniqueId('key_');
     };
     //通用删除秘钥方法
     const deleteCode = (uuid) => {
@@ -269,6 +266,7 @@ export default () => {
     const addCode = (uri) => {
         try {
             //console.log(OTPAuth.URI.parse(uri));
+            console.log('添加开始');
             if (DATA.length !== 0) {
                 let isSame = false;
                 for (let i = 0; i < DATA.length; i++) {
@@ -317,8 +315,12 @@ export default () => {
                     //dataInitialization();
                 }
             } else {
+                console.log('啦啦啦');
                 let uuid = setUUID();
+                console.log('啦啦啦啦');
+
                 try {
+                    console.log(uuid, ' ', uri);
                     setStorageSync(uuid, uri);
                 } catch (e) {
                     console.log('localStorage存储错误！', e);
