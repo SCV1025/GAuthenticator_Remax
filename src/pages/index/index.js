@@ -1,16 +1,17 @@
 import * as React from 'react';
-import { View, Text, Image } from 'remax/one';
+import { View } from 'remax/one';
 import styles from './index.module.scss';
-import { Form, Tabs, Button, Icon, Card, Popup, Cell } from 'annar';
+import { Button, Card, Cell, Form, Icon, Popup, Tabs } from 'annar';
 import { usePageEvent } from 'remax/macro';
 import _ from 'lodash';
 import * as dayjs from 'dayjs';
 
 import {
-    scanCode,
-    setStorageSync,
     getStorageInfoSync,
     getStorageSync,
+    removeStorageSync,
+    scanCode,
+    setStorageSync,
 } from 'remax/wechat';
 import * as OTPAuth from 'otpauth';
 
@@ -248,6 +249,22 @@ export default () => {
             },
         });
     };
+    //生成UUID
+    const setUUID = () => {
+        let temp_url = URL.createObjectURL(new Blob());
+        let uuid = temp_url.toString();
+        URL.revokeObjectURL(temp_url);
+        return uuid.substr(uuid.lastIndexOf('/') + 1);
+    };
+    //通用删除秘钥方法
+    const deleteCode = (uuid) => {
+        try {
+            removeStorageSync(uuid);
+            setDATA((data) => data.filter((v) => v.key !== uuid));
+        } catch (e) {
+            console.log('localStorage删除错误！', e);
+        }
+    };
     //通用添加秘钥方法
     const addCode = (uri) => {
         try {
@@ -268,14 +285,31 @@ export default () => {
                     }
                 }
                 if (!isSame) {
-                    try {
-                        setStorageSync(DATA.length.toString(), uri);
-                    } catch (e) {
-                        console.log('localStorage存储错误！', e);
+                    let uuid;
+                    while (1) {
+                        uuid = setUUID();
+                        try {
+                            let value = getStorageSync(uuid);
+                            if (!value) {
+                                try {
+                                    setStorageSync(uuid, uri);
+                                } catch (e) {
+                                    console.log('localStorage存储错误！', e);
+                                }
+                                break;
+                            }
+                        } catch (e) {
+                            try {
+                                setStorageSync(uuid, uri);
+                            } catch (e) {
+                                console.log('localStorage存储错误！', e);
+                            }
+                            break;
+                        }
                     }
                     let newData = _.cloneDeep(DATA);
                     newData.push({
-                        key: DATA.length.toString(),
+                        key: uuid,
                         rowData: OTPAuth.URI.parse(uri),
                     });
                     console.log(DATA, JSON.parse(JSON.stringify(DATA)));
@@ -283,19 +317,20 @@ export default () => {
                     //dataInitialization();
                 }
             } else {
+                let uuid = setUUID();
                 try {
-                    setStorageSync(DATA.length.toString(), uri);
+                    setStorageSync(uuid, uri);
                 } catch (e) {
                     console.log('localStorage存储错误！', e);
                 }
                 try {
-                    setStorageSync(DATA.length.toString(), uri);
+                    setStorageSync(uuid, uri);
                 } catch (e) {
                     console.log('localStorage存储错误！', e);
                 }
                 let newData = _.cloneDeep(DATA);
                 newData.push({
-                    key: DATA.length.toString(),
+                    key: uuid,
                     rowData: OTPAuth.URI.parse(uri),
                 });
                 setDATA(newData);
@@ -353,6 +388,26 @@ export default () => {
                                     <View className={styles.foot}>
                                         {item.rowData.issuer}
                                     </View>
+                                }
+                                extra={
+                                    <Button
+                                        danger
+                                        shape='square'
+                                        icon={
+                                            <Icon
+                                                type='delete'
+                                                color='#da2500'
+                                                size='28px'
+                                            />
+                                        }
+                                        block
+                                        onTap={() => {
+                                            deleteCode(item.key);
+                                        }}
+                                    >
+                                        {' '}
+                                        删除
+                                    </Button>
                                 }
                             >
                                 <View className={styles.content}>
