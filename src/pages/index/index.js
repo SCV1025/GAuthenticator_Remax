@@ -1,7 +1,16 @@
 import * as React from 'react';
 import { View } from 'remax/one';
 import styles from './index.module.scss';
-import { Button, Card, Cell, Form, Icon, Popup, Tabs } from 'annar';
+import {
+    ActionSheet,
+    Button,
+    Card,
+    Cell,
+    Form,
+    Icon,
+    Popup,
+    Tabs,
+} from 'annar';
 import { usePageEvent } from 'remax/macro';
 import _ from 'lodash';
 import * as dayjs from 'dayjs';
@@ -16,6 +25,12 @@ import {
 } from 'remax/wechat';
 import * as OTPAuth from 'otpauth';
 
+const ACTION_BUTTON = [
+    { value: 1, text: '修改' },
+    { value: 2, text: '分享' },
+    { value: 3, text: '删除', type: 'destructive' },
+];
+
 export default () => {
     //密码数据对象数组
     const [DATA, setDATA] = React.useState([]);
@@ -28,6 +43,12 @@ export default () => {
     //秘钥弹窗输入内容
     const [inputValue, setInputValue] = React.useState('');
     const [stateKey1, setStateKey1] = React.useState('0');
+
+    //当前长按对象
+    const [item, setItem] = React.useState(null);
+
+    //ActionsSheet 控制
+    const [open, setOpen] = React.useState(false);
 
     //手动输入-秘钥链接函数
     const handleFinish1 = (values) => {
@@ -257,6 +278,8 @@ export default () => {
         try {
             removeStorageSync(uuid);
             setDATA((data) => data.filter((v) => v.key !== uuid));
+            setOpen(false);
+            popupNow('删除成功！');
         } catch (e) {
             console.log('localStorage删除错误！', e);
         }
@@ -346,6 +369,17 @@ export default () => {
         setShow(true);
     };
 
+    //长按
+    const handleActionsSheet = () => {
+        setOpen(true);
+    };
+
+    React.useEffect(() => {
+        if (!open) {
+            setItem(null);
+        }
+    }, [open]);
+
     return (
         <View className={styles.app}>
             <View className={styles.header}>
@@ -381,7 +415,13 @@ export default () => {
             <View className={styles.card_list}>
                 {DATA.length > 0 ? (
                     DATA.map((item, index) => (
-                        <View key={index}>
+                        <View
+                            key={index}
+                            onLongTap={() => {
+                                handleActionsSheet();
+                                setItem(item);
+                            }}
+                        >
                             <Card
                                 title={item.rowData.label}
                                 className={styles.card}
@@ -389,26 +429,6 @@ export default () => {
                                     <View className={styles.foot}>
                                         {item.rowData.issuer}
                                     </View>
-                                }
-                                extra={
-                                    <Button
-                                        danger
-                                        shape='square'
-                                        icon={
-                                            <Icon
-                                                type='delete'
-                                                color='#da2500'
-                                                size='28px'
-                                            />
-                                        }
-                                        block
-                                        onTap={() => {
-                                            deleteCode(item.key);
-                                        }}
-                                    >
-                                        {' '}
-                                        删除
-                                    </Button>
                                 }
                             >
                                 <View className={styles.content}>
@@ -541,6 +561,17 @@ export default () => {
                 {/*    }*/}
                 {/*/>*/}
             </Popup>
+            <ActionSheet
+                open={open}
+                actions={ACTION_BUTTON}
+                onCancel={() => setOpen(false)}
+                onChange={(target, g, e) => {
+                    console.log(target);
+                    if (target.value === 3) {
+                        deleteCode(item.key);
+                    }
+                }}
+            />
         </View>
     );
 };
