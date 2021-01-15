@@ -22,12 +22,13 @@ import {
     removeStorageSync,
     scanCode,
     setStorageSync,
+    setClipboardData,
 } from 'remax/wechat';
 import * as OTPAuth from 'otpauth';
 
 const ACTION_BUTTON = [
     { value: 1, text: '修改' },
-    { value: 2, text: '分享' },
+    { value: 2, text: '导出' },
     { value: 3, text: '删除', type: 'destructive' },
 ];
 
@@ -373,6 +374,10 @@ export default () => {
     const handleActionsSheet = () => {
         setOpen(true);
     };
+    //点击复制
+    const handleSetClipboard = (str) => {
+        setClipboardData({ data: str }).then(() => {});
+    };
 
     React.useEffect(() => {
         if (!open) {
@@ -429,6 +434,9 @@ export default () => {
                                     <View className={styles.foot}>
                                         {item.rowData.issuer}
                                     </View>
+                                }
+                                onTap={() =>
+                                    handleSetClipboard(item.rowData.generate())
                                 }
                             >
                                 <View className={styles.content}>
